@@ -32,6 +32,8 @@ function defaultOptions(): FidgetPincherOptions {
 }
 
 export class FidgetPincher {
+  static TransformationMatrix = TransformationMatrix;
+
   private impl: Impl
   private pointerMap: Map<TouchIdentifier, ImplPointer>;
 
@@ -71,14 +73,24 @@ export class FidgetPincher {
     }
   }
 
-  setTouchElement(element: HTMLElement, options: TouchElementOptions) {
+  setTouchElement(element: HTMLElement, options: TouchElementOptions): () => void {
     const events = this.createEvents(element);
     element.addEventListener('mousedown', events.mousedown);
     element.addEventListener('touchstart', events.touchstart);
     element.addEventListener('touchmove', events.touchmove);
     element.addEventListener('touchend', events.touchend);
-    if (options.onTransformed !== undefined) {
-      this.impl.addTransformedCallback(options.onTransformed);
+    const { onTransformed } = options;
+    if (onTransformed !== undefined) {
+      this.impl.addTransformedCallback(onTransformed);
+    }
+    return () => {
+      element.removeEventListener('mousedown', events.mousedown);
+      element.removeEventListener('touchstart', events.touchstart);
+      element.removeEventListener('touchmove', events.touchmove);
+      element.removeEventListener('touchend', events.touchend);
+      if (onTransformed !== undefined) {
+        this.impl.removeTransformedCallback(onTransformed);
+      }
     }
   }
 

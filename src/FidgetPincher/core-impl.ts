@@ -248,6 +248,13 @@ export class Impl {
     this.transformedCallbacks.push(callback);
   }
 
+  removeTransformedCallback(callback: (transform: TransformationMatrix) => void) {
+    const index = this.transformedCallbacks.indexOf(callback);
+    if (index >= 0) {
+      this.transformedCallbacks.splice(index, 1);
+    }
+  }
+
   notifyTransformed() {
     for (const callback of this.transformedCallbacks) {
       try {
