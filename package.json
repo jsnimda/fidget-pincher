@@ -2,7 +2,11 @@
   "name": "fidget-pincher",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/bundle.js",
+  "unpkg": "dist/bundle.min.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -19,6 +23,7 @@
   },
   "homepage": "https://github.com/jsnimda/fidget-pincher#readme",
   "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.3",
     "@rollup/plugin-typescript": "^11.1.1",
     "rollup": "^3.25.1",
     "tslib": "^2.5.3",
