@@ -13,8 +13,10 @@
 </div>
 <script src="https://unpkg.com/fidget-pincher/dist/bundle.min.js"></script>
 <script>
+
   /* 1. Create a new instance of FidgetPincher */
   const fidgetPincher = new FidgetPincher({
+    /* by default, all options are set to true */
     // enableInertia: false, // set to false implies all other inertia options are false
     // enableTranslateInertia: false, // inertia when touches from 1 to 0
     // enableFidgetSpinInertia: false, // inertia when touches from 2 to 1
@@ -26,6 +28,7 @@
     // stopPinchInertiaOnTouch: false, // stop pinch inertia when touches from 0 to 1
     // stopFidgetSpinInertiaOnPinchInertia: false, // stop fidget spin inertia when pinch inertia is applied
   });
+
   /* 2. Hook up the container, this element will listen for MouseEvent and TouchEvent */
   const container = document.querySelector('.container');
   const detach = fidgetPincher.setTouchElement(document.getElementById('fidget-pincher'), {
@@ -37,14 +40,22 @@
       container.style.transform = transform.toCSSMatrix();
     },
   });
+
   /* 2b. Detach any time, listeners will be removed */
   // detach();
+
   /* 3. You can set transformation matrix at any time, this won't trigger onTransformed callback, next pinch movement will be relative to this matrix */
-  console.log(fidgetPincher.getTransform()); // return { a, b, c, d, e, f }
-  let a = 1, b = 0, c = 0, d = 1, e = 0, f = 0;
-  fidgetPincher.setTransform([a, b, c, d, e, f]);  // you can pass array
-  fidgetPincher.setTransform({ a, b, c, d, e, f });  // or object
-  fidgetPincher.setTransform(new FidgetPincher.TransformationMatrix(a, b, c, d, e, f));  // or instance of TransformationMatrix
+  // console.log('getTransform', fidgetPincher.getTransform()); // return { a, b, c, d, e, f }
+  // let a = 1, b = 0, c = 0, d = 1, e = 0, f = 0;
+  // fidgetPincher.setTransform([a, b, c, d, e, f]);  // you can pass array
+  // fidgetPincher.setTransform({ a, b, c, d, e, f });  // or object
+  // fidgetPincher.setTransform(`matrix(${a}, ${b}, ${c}, ${d}, ${e}, ${f})`);  // or string
+  // fidgetPincher.setTransform(new FidgetPincher.TransformationMatrix(a, b, c, d, e, f));  // or instance of TransformationMatrix
+
+  /* 4. You can also get the instance of TransformationMatrix by calling FidgetPincher.parseTransform() */
+  // console.log('parseTransform', FidgetPincher.parseTransform([a, b, c, d, e, f])); // you can pass array
+  // console.log('parseTransform', FidgetPincher.parseTransform({ a, b, c, d, e, f })); // or object
+  // console.log('parseTransform', FidgetPincher.parseTransform(`matrix(${a}, ${b}, ${c}, ${d}, ${e}, ${f})`)); // or string
 </script>
 <style>
   #fidget-pincher {

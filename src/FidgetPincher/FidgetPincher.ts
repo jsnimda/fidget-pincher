@@ -98,8 +98,35 @@ export class FidgetPincher {
     return this.impl.transform;
   }
 
+  public static parseTransform(transform: unknown): TransformationMatrix {
+    if (transform instanceof TransformationMatrix) {
+      return transform;
+    }
+    if (Array.isArray(transform)) {
+      const [a, b, c, d, e, f] = transform;
+      return new TransformationMatrix(a, b, c, d, e, f);
+    }
+    if (typeof transform === 'string') {
+      // match 'matrix(a, b, c, d, e, f)'
+      const match = transform.match(/^matrix\((.+)\)$/);
+      if (match) {
+        const [a, b, c, d, e, f] = match[1].split(',').map(parseFloat);
+        return new TransformationMatrix(a, b, c, d, e, f);
+      }
+    }
+    if (typeof transform === 'object') {
+      const { a, b, c, d, e, f } = transform as any;
+      return new TransformationMatrix(a, b, c, d, e, f);
+    }
+    throw new Error(`Invalid transform: ${transform}`);
+  }
+
   // won't trigger onTransformed callback
   setTransform(transform: TransformationMatrix) {
+    // support [a, b, c, d, e, f] and { a, b, c, d, e, f }
+    if (!(transform instanceof TransformationMatrix)) {
+      transform = FidgetPincher.parseTransform(transform);
+    }
     this.impl.transform = transform;
   }
 
